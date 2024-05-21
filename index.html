@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket with jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>WebSocket with jQuery Example</h1>
+    <div id="messages"></div>
+    <input type="text" id="messageInput" placeholder="Type a message">
+    <button id="sendMessage">Send</button>
+
+    <script>
+        $(document).ready(function() {
+            // Create a new WebSocket connection
+            var socket = new WebSocket('ws://localhost:8080');
+
+            // Event handler for connection open
+            socket.onopen = function() {
+                console.log('Connected to the WebSocket server');
+                $('#messages').append('<p>Connected to the WebSocket server</p>');
+            };
+
+            // Event handler for receiving a message
+            socket.onmessage = function(event) {
+                console.log('Received message: ' + event.data);
+                $('#messages').append('<p>Received message: ' + event.data + '</p>');
+            };
+
+            // Event handler for connection close
+            socket.onclose = function() {
+                console.log('Disconnected from the WebSocket server');
+                $('#messages').append('<p>Disconnected from the WebSocket server</p>');
+            };
+
+            // Event handler for errors
+            socket.onerror = function(error) {
+                console.log('WebSocket error: ' + error);
+                $('#messages').append('<p>WebSocket error: ' + error + '</p>');
+            };
+            
+            // Send message to the WebSocket server when the button is clicked
+            $('#sendMessage').click(function() {
+                var message = $('#messageInput').val();
+                socket.send(message);
+                $('#messages').append('<p>Sent message: ' + message + '</p>');
+            });
+        });
+    </script>
+</body>
+</html>

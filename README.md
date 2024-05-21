@@ -1,1 +1,2 @@
-# web_socket
+npm install
+node server.js
