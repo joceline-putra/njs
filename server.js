@@ -50,4 +50,4 @@ socketSERVER.on('connection', (socket) => {
 
 console.log('WEBSOCKET server is running on ws://localhost:'+process.env.WEBSOCKET_PORT);
 
-module.exports = socketSERVER;
+module.exports = socketSERVER; 
