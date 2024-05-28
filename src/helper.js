@@ -1,31 +1,3 @@
-// module.exports =
-// {
-//     loadDataUser,
-// }
-// let connection          	= require("./config/database");
-// let socketSERVER = require("../server");
-// async function loadDataUser(){
-//     const query = 'SELECT * FROM users WHERE user_flag = 1 LIMIT 1';
-//     connection.query(query, (error, results, fields) => {
-//         if (error) {
-//             console.error('Error executing query:', error.stack);
-//             return;
-//         }
-  
-//         // Jika data ditemukan, kirim data ke semua klien
-//         const message = results.length > 0
-//             ? JSON.stringify({ message: 'Data from MySQL', data: results })
-//             : JSON.stringify({ message: 'No data found' });
-  
-//         socketSERVER.clients.forEach((client) => {
-//             if (client.readyState === WebSocket.OPEN) {
-//                 client.send(message);
-//                 console.log('1 Data found');
-//             }
-//         });
-//         // console.log(message);
-//     });
-// }
 
 module.exports =
 {
@@ -77,7 +49,7 @@ async function returnJson(status, message, aa){
         status: status,
         message: message,
         result:aa
-    })
+    });
 }
 async function removeStringSender(inputString) { 
     return inputString.replace(/[^0-9]/g, ''); 
