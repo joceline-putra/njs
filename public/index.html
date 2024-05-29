@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js MySQL API</title>
+</head>
+<body>
+    <h1>Node.js MySQL API</h1>
+
+    <h2>Create User</h2>
+    <form id="createUserForm">
+        <label for="name">Nama:</label>
+        <input type="text" id="name" name="name" value="Joe"><br><br>
+        <label for="age">Branch:</label>
+        <input type="number" id="age" name="age" value="33"><br><br>
+        <input type="submit" value="Create">
+    </form>
+
+    <h2>Users List</h2>
+    <button onclick="fetchUsers()">Refresh Users List</button>
+    <ul id="usersList"></ul>
+
+    <script>
+        document.getElementById('createUserForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const age = document.getElementById('age').value;
+
+            const response = await fetch('/api/user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                // body: JSON.stringify({ name:name, age}),
+                body:JSON.stringify({
+                    action:'create',
+                    user_username:name,
+                    user_branch_id:age
+                })
+            });
+            const result = await response.json();
+            alert(`User Created: ${JSON.stringify(result)}`);
+        });
+
+        async function fetchUsers() {
+            const response = await fetch('/api/user');
+            const users = await response.json();
+            const usersList = document.getElementById('usersList');
+            usersList.innerHTML = '';
+            users.forEach(user => {
+                const li = document.createElement('li');
+                li.textContent = `ID: ${user.id}, Name: ${user.name}, Age: ${user.age}`;
+                usersList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,45 +1,106 @@
 // Variable
-const express       = require('express');
-const router           = express();
+const express           = require('express');
+const router            = express();
 // const { Router } 	= require('express'); 
 // const app			= Router(); 
-const cn          	= require("../config/database");
+// const cn          	    = require("../config/database");
 
 // Function
-const {myAsyncFunction, myAsyncFunction2, returnJson, removeStringSender, phoneNumberFormatter}        = require("../helper.js");
-
+// const {myAsyncFunction, myAsyncFunction2, returnJson, removeStringSender, phoneNumberFormatter}        = require("../config/helper.js");
 
 // Model
 const user_Model = require('../models/user_model');
 const userModel = new user_Model();
 
 // Router
-router.get('/', (req, res) => {
+router.post('/', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
-        
-    let body = req.query
+
+    // let body = req.query // GET
+    let body = req.body; // POST
     let action = body.action
-    let number = body.number
-    let term = body.term
+
+    // console.log(action);
     console.log("Node: Body => "+JSON.stringify(body));
-    if(req.query.action == '' || req.query.action === undefined){   
+    if(action == '' || action === undefined){   
         // returnJson(res, 0, 'Action Not Found');   
         console.error('No Action');
     }else{ 
+        let userID = (typeof body.user_id !== 'undefined' && body.user_id !== null && body.user_id !== '') ? body.user_id : 0;
         switch(action){
-            case "read": //Works with model
-                // http://localhost:3030/api/users?action=read&user_id=1
-                userModel.findById(body.user_id).then((result) => {
-                    let userData = {
-                        user_id: result.user_id,
-                        user_username: result.user_username,
-                    }
-                    console.log('USER READ: ', JSON.stringify(userData));
-                    // returnJson(res, 1, 'Read '+body.user_id, userData); 
-                    res.status(200).send(userData);   
+            case "create": //Works with model
+                // http://localhost:3030/api/user?action=create&user_branch_id=22&user_username=joeejoee
+                paramUser = {
+                    user_branch_id: body.user_branch_id,
+                    user_username: body.user_username
+                };
+                userModel.create(paramUser).then((insertId) => {
+                    // console.log('USER CREATE: user_id => ', insertId);
+                    // returnJson(res, 1, 'Success Created user_id => '+ insertId);     
+                    res.status(200).send({status:1,message:'Created'});                                 
                 }).catch((error) => {
-                    console.error('Error retrieving user:', error);
+                    console.error('ERROR:', error.sqlMessage);
+                    res.status(400).send({status:0,message:'Error'});                        
+                    // returnJson(res, 0, error.sqlMessage);                                             
+                });
+                break; 
+            case "update": //Works with model
+                // http://localhost:3030/api/user?action=update&user_id=9&user_username=joeupdate&user_branch_id=33
+                
+                //Check ID First
+                if(userID > 0){
+                    paramUser = {
+                        user_username: body.user_username,
+                        user_branch_id: body.user_branch_id
+                    };
+                    userModel.update(userID, paramUser).then((affectedRows) => {
+                        console.log('USER UPDATE: ', userID);
+                        res.status(200).send({status:1,message:'Updated'});  
+                        // returnJson(res, 1, 'Success Update '+body.device_id);                                     
+                    }).catch((error) => {
+                        console.error('ERROR:', error.sqlMessage);
+                        res.status(400).send({status:0,message:'Error'});                         
+                        // returnJson(res, 0, error.sqlMessage);                                             
+                    });        
+                }else{
+                    // console.error('ERROR: missing user_id');
+                    res.status(400).send({status:0,message:'Error missing user_id'}); 
+                }
+                break;                                  
+            case "read": //Works with model
+                // http://localhost:3030/api/user?action=read&user_id=1
+                userModel.findById(userID).then((result) => {
+
+                    // Found Data
+                    if(typeof result !== 'undefined'){
+                        let userData = {
+                            user_id: result.user_id,
+                            user_username: result.user_username,
+                        }
+                        console.log('USER READ: ', JSON.stringify(userData));
+                        // returnJson(res, 1, 'Read '+body.user_id, userData); 
+                        res.status(200).send({status:1,message:'Success',result:userData});   
+                    }else{
+                        res.status(200).send({status:1,message:'Not Found'});  
+                    }
+                }).catch((error) => {
+                    console.error('ERROR:', error);
+                    // res.status(400).send('ERROR: Missing user_id');
                     // returnJson(res, 0, error.sqlMessage);    
+                    res.status(400).send({status:0,message:'Error'});    
+                });
+                break;
+            case "delete": //Works with model
+                // http://localhost:3030/api/user?action=delete&user_id=2
+                // let userID = body.user_id;
+                userModel.delete(userID).then((affectedRows) => {
+                    console.log('USER DELETE: ', userID);
+                    // returnJson(res,1,'Deleted '+userID);
+                    res.status(200).send({status:1,message:'Deleted '+userID});   
+                }).catch((error) => {
+                    console.error('ERROR:', error.sqlMessage);
+                    // returnJson(res, 0, error.sqlMessage);  
+                    res.status(400).send({status:0,message:'Error'});                     
                 });
                 break;
             default:
@@ -50,15 +111,16 @@ router.get('/', (req, res) => {
 })
 
 // Get all users
-// router.get('/', (req, res) => {
-//     cn.query('SELECT * FROM users', (err, results) => {
-//         if (err) {
-//             res.status(500).send(err);
-//         } else {
-//             res.json(results);
-//         }
-//     });
-// });
+/*
+router.get('/', (req, res) => {
+    cn.query('SELECT * FROM users', (err, results) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            res.json(results);
+        }
+    });
+});
 
 // Get a single user by ID
 router.get('/:id', (req, res) => {
@@ -108,5 +170,6 @@ router.delete('/:id', (req, res) => {
         }
     });
 });
+*/
 
 module.exports = router;
