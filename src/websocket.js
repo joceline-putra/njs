@@ -2,10 +2,10 @@
 const WebSocket     = require('ws');
 const mysql         = require('mysql');
 
-const connection    = require("./src/config/database");
-const {returnJson}  = require("./src/helper.js");
+const connection    = require("./config/database");
+const {returnJson}  = require("./helper.js");
 
-const user_Model    = require('./src/models/user_model');
+const user_Model    = require('./models/user_model');
 
 const userModel     = new user_Model();
 const socketSERVER = new WebSocket.Server({ port: process.env.WEBSOCKET_PORT });

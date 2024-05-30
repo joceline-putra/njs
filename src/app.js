@@ -16,7 +16,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes from Router
-app.use('/api/user', require("./src/routes/user"));
+app.use('/api/user', require("./routes/user"));
 
 // Start the server
 app.listen(process.env.APP_PORT, () => {

@@ -13,11 +13,11 @@ const user_Model = require('../models/user_model');
 const userModel = new user_Model();
 
 // Router
-router.post('/', (req, res) => {
+router.get('/', (req, res) => {
     res.setHeader('Content-Type', 'application/json')
 
-    // let body = req.query // GET
-    let body = req.body; // POST
+    let body = req.query // GET
+    // let body = req.body; // POST
     let action = body.action
 
     // console.log(action);

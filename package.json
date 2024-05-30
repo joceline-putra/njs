@@ -1,14 +1,14 @@
 {
-  "name": "websocket",
+  "name": "Project Name",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "Your Node.js project description",
+  "main": "src/app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node src/app.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["node","express","javascript"],
+  "author": "Joe Witaya <joceline.putra@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.5",
