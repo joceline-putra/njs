@@ -4,23 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Node.js MySQL API</title>
+
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="/plugins/bootstrap/css/bootstrap.min.css">    
 </head>
 <body>
-    <h1>Node.js MySQL API</h1>
-
-    <h2>Create User</h2>
-    <form id="createUserForm">
-        <label for="name">Nama:</label>
-        <input type="text" id="name" name="name" value="Joe"><br><br>
-        <label for="age">Branch:</label>
-        <input type="number" id="age" name="age" value="33"><br><br>
-        <input type="submit" value="Create">
-    </form>
-
-    <h2>Users List</h2>
-    <button onclick="fetchUsers()">Refresh Users List</button>
-    <ul id="usersList"></ul>
-
+    <div class="container mt-5">
+        <h1>Halo, Bootstrap 5 & Select2 di Node.js!</h1>
+        <h1>Node.js MySQL API</h1>
+        <h2>Create User</h2>
+        <form id="createUserForm">
+            <label for="name">Nama:</label>
+            <input type="text" id="name" name="name" value="Joe" class="form-control"><br><br>
+            <label for="age">Branch:</label>
+            <input type="number" id="age" name="age" value="33" class="form-control">
+            <button type="submit" value="Create" class="btn btn-success">Create</button>
+        </form>
+        <h2>Users List</h2>
+        <button class="btn btn-primary" onclick="fetchUsers()">Refresh Users List</button>
+        <ul id="usersList"></ul>
+    
+    </div>    
+   <!-- Bootstrap 5 JS -->
+   <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>    
     <script>
         document.getElementById('createUserForm').addEventListener('submit', async function (e) {
             e.preventDefault();

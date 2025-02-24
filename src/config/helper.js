@@ -39,16 +39,16 @@ async function myAsyncFunction2(){
     return;
 }
 
-async function returnJson(status, message, aa){
+async function returnJson(res, status, message){
     // return json({
     //     status: status,
     //     message: message,
-    //     result:aa
+    //     result:res
     // }); 
     return JSON.stringify({
         status: status,
         message: message,
-        result:aa
+        result:res
     });
 }
 async function removeStringSender(inputString) { 

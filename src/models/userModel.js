@@ -30,7 +30,9 @@ class userModel {
 
     async create(data) {
         const query = `INSERT INTO ${this.tableName} SET ?`;
+        console.log("Executing Query:", query, "With Data:", data);
         const result = await this.executeQuery(query, data);
+        console.log("Insert Result:", result);
         return result.insertId;
     }
 
@@ -60,4 +62,4 @@ class userModel {
     }    
 }
 
-module.exports = userModel;
+module.exports = new userModel();
