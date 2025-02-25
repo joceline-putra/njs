@@ -19,6 +19,34 @@ exports.index = (req, res) => {
     }else{ 
         let userID = (typeof body.user_id !== 'undefined' && body.user_id !== null && body.user_id !== '') ? body.user_id : 0;
         switch(action){
+            case "load": //Works with model
+                // http://localhost:3030/api/user?action=read&user_id=1
+                // const where = {
+                //     user_flag: 1 // Contoh: hanya ambil user yang aktif
+                // };
+                where = {};
+                search = {};
+                limit = 5;
+                start = 0;
+                order_by = 'user_username';
+                dir = 'DESC';
+                userModel.findAll(where,search,limit,start,order_by,dir).then((result) => {
+
+                    // Found Data
+                    if(typeof result !== 'undefined'){
+                        // console.log('USER READ: ', JSON.stringify(result));
+                        // returnJson(res, 1, 'Read '+body.user_id, userData); 
+                        res.status(200).send({status:1,message:'Success',result:result});   
+                    }else{
+                        res.status(200).send({status:1,message:'Not Found'});  
+                    }
+                }).catch((error) => {
+                    // console.error('ERROR:', error);
+                    // res.status(400).send('ERROR: Missing user_id');
+                    // returnJson(res, 0, error.sqlMessage);    
+                    res.status(400).send({status:0,message:'Error'});    
+                });
+            break;
             case "create": //Works with model
                 // http://localhost:3030/api/user?action=create&user_branch_id=22&user_username=joeejoee
                 paramUser = {

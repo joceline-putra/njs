@@ -1,7 +1,7 @@
 var cn = require("../config/database");
 
 class userModel {
-    constructor(chats){
+    constructor(){
         this.tableName = 'users';
     }
     executeQuery(query, params) {
@@ -16,10 +16,53 @@ class userModel {
         });
     }
  
-    async findAll() {
-        const query = `SELECT * FROM ${this.tableName}`;
-        const results = await this.executeQuery(query);
-        return results;
+    async findAll(where = {}, search = {}, limit = 10, start = 0, order_by = "user_id", dir = "ASC") {
+        let query = `SELECT * FROM ${this.tableName}`;
+        let conditions = [];
+        let values = [];
+
+        // 🔹 Tambahkan kondisi WHERE berdasarkan `where`
+        if (Object.keys(where).length > 0) {
+            Object.entries(where).forEach(([key, value]) => {
+                conditions.push(`${key} = ?`);
+                values.push(value);
+            });
+        }
+
+        // 🔹 Tambahkan kondisi SEARCH (pencarian LIKE di beberapa kolom)
+        if (Object.keys(search).length > 0) {
+            let searchConditions = [];
+            Object.entries(search).forEach(([key, value]) => {
+                searchConditions.push(`${key} LIKE ?`);
+                values.push(`%${value}%`);
+            });
+
+            if (searchConditions.length > 0) {
+                conditions.push(`(${searchConditions.join(" OR ")})`);
+            }
+        }
+
+        // 🔹 Gabungkan semua kondisi dalam query
+        if (conditions.length > 0) {
+            query += ` WHERE ${conditions.join(" AND ")}`;
+        }
+
+        // 🔹 ORDER BY
+        if (order_by) {
+            query += ` ORDER BY ${order_by} ${dir.toUpperCase() === "DESC" ? "DESC" : "ASC"}`;
+        }
+
+        // 🔹 LIMIT & OFFSET
+        // query += ` LIMIT ? OFFSET ?`;
+        // values.push(limit,start);
+
+        query += ` LIMIT ?, ?`;
+        values.push(start,limit);
+
+        // 🔥 Debugging Query
+        console.log("🟢 Query MySQL:", this.generateRawQuery(query, values));
+
+        return await this.executeQuery(query, values);
     }
 
     async findById(id) {
@@ -60,6 +103,15 @@ class userModel {
         const results = await this.executeQuery(query, [flag]);
         return results[0];
     }    
+    
+    // 🔹 Fungsi terpisah untuk menggantikan parameter (?) dengan nilai aktual
+    generateRawQuery(query, values) {
+        let rawQuery = query;
+        values.forEach(value => {
+            rawQuery = rawQuery.replace("?", typeof value === "string" ? `'${value}'` : value);
+        });
+        return rawQuery;
+    }
 }
 
 module.exports = new userModel();
