@@ -132,7 +132,7 @@ exports.index = (req, res) => {
 exports.page = (req, res) => {
     res.status(404).send("Menampilkan form tambah user...");
     console.error('No Action');
-    // res.sendFile(path.join(__dirname, '../views/menu/user.html'));    
+    // res.sendFile(__dirname + '/src/views/user.html');    
 };
 
 exports.getUsers = (req, res) => { // Works 

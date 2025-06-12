@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Socket Client</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+	<h1>Client</h1>
+    <div id="status">🔴 Tidak terhubung</div>
+    <div id="messages"></div>
+
+    <script>
+        $(document).ready(function() {
+            // Inisialisasi WebSocket dengan Socket.IO
+            const socket = io("http://localhost:3030");
+			// const roomId = "room_2";
+            // // const socket = io();            
+			// socket.emit('join_room', roomId);
+            // const roomId = 'room_2';
+            // const socket = io({ query: { room: roomId } }); 
+			// alert('heher');
+            // const socket = io();       
+            const roomId = 'ROOM_2';
+            socket.emit('join_room', roomId);			
+            // Saat berhasil terhubung
+            socket.on('connect', function() {
+                $("#status").html("🟢 " + roomId + " : " + socket.id);
+            });
+            
+            socket.on('notify', function(msg) {
+                console.log('Notifikasi diterima:', msg);
+                
+                // Contoh pakai alert
+                // alert(msg);
+                $("#messages").append("<p>🗨️ " + msg + "</p>");
+                $("#messages").scrollTop($("#messages")[0].scrollHeight);
+                // Kalau di Electron, bisa juga pakai Notification API:
+                // new Notification('Karaoke', { body: msg });
+            });
+
+            // Saat menerima pesan baru
+            socket.on('chat message', function(msg) {
+                $("#messages").append("<p>🗨️ " + msg + "</p>");
+                $("#messages").scrollTop($("#messages")[0].scrollHeight);
+            });
+
+            // Saat koneksi terputus
+            socket.on('disconnect', function() {
+                $("#status").html("🔴 Koneksi terputus");
+            });
+
+
+            // Saat tombol kirim ditekan
+            $("#sendMessage").click(function() {
+                let msg = $("#messageInput").val().trim();
+                if (msg) {
+                    socket.emit('chat message', msg); // Kirim pesan ke server
+                    $("#messageInput").val(""); // Kosongkan input setelah mengirim
+                }
+            });
+
+        });
+    </script>
+</body>
+</html>

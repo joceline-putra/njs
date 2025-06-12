@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="title">Socket Client</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+</head>
+
+<body>
+    <h1>Client</h1>
+    <div id="status">🔴 Tidak terhubung</div>
+    <div id="messages"></div>
+    <div class="col-md-4 col-xs-12 padding-remove-side" id="loginForm">
+        <div class="form-group">
+            <label class="form-label">ROOM</label>
+            <div class="controls">
+                <input name="room_id" id="room_id" type="text" class="form-control input-sm">
+            </div>
+        </div>
+        <button id="btnLogin">Login</button>
+    </div>
+    <button id="btnLogout" style="display:none;">Logout</button>
+    <script>
+        $(document).ready(function() {
+            let socket = null;
+            let isLoggedIn = false;
+
+            $(document).on('click','#btnLogin', function() {
+                let room_id = $("#room_id").val();
+                if (room_id) {
+                    socket = io("http://localhost:3030");
+                    socket.emit('join_room', room_id);
+                    socket.on('connect', function() {
+                        $("#status").html("🟢 " + room_id + " : " + socket.id);
+                        $("#loginForm").hide();
+                        $("#btnLogout").show();
+                        isLoggedIn = true;
+                    });
+                    socket.on('notify', function(msg) {
+                        $("#messages").append("<p>🗨️ " + msg + "</p>");
+                        $("#messages").scrollTop($("#messages")[0].scrollHeight);
+                    });
+                    socket.on('chat message', function(msg) {
+                        $("#messages").append("<p>🗨️ " + msg + "</p>");
+                        $("#messages").scrollTop($("#messages")[0].scrollHeight);
+                    });
+                    socket.on('disconnect', function() {
+                        $("#status").html("🔴 Koneksi terputus");
+                        if (isLoggedIn) {
+                            $("#btnLogout").hide();
+                            $("#loginForm").show();
+                            $("#room_id").val("");
+                            isLoggedIn = false;
+                        }
+                    });
+                    // Kirim pesan (jika ada fitur sendMessage)
+                    $("#sendMessage").off('click').on('click', function() {
+                        let msg = $("#messageInput").val().trim();
+                        if (msg) {
+                            socket.emit('chat message', msg);
+                            $("#messageInput").val("");
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click','#btnLogout', function() {
+                if (socket) {
+                    socket.disconnect();
+                    socket = null;
+                }
+                $("#btnLogout").hide();
+                $("#loginForm").show();
+                $("#room_id").val("");
+                $("#status").html("🔴 Tidak terhubung");
+                isLoggedIn = false;
+            });
+        });
+    </script>
+</body>
+</html>

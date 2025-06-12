@@ -1,12 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const path                = require('path');
 
 const userController = require("../controllers/userController");
 
-router.get("/", userController.page);
+// router.get("/user", userController.page);
+router.get("/", (req, res) => 
+    res.sendFile(
+        path.join(__dirname, '../views/user.html')
+    )
+);
 router.post("/", userController.index);
-
-// router.get("/create", userController.showForm);
 router.get("/read/:id", userController.getUsers);
 
 router.post("/create", userController.createUser);

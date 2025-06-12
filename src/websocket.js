@@ -1,4 +1,5 @@
 // server.js
+return;
 const WebSocket     = require('ws');
 const mysql         = require('mysql');
 

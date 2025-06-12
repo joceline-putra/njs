@@ -1,0 +1,16 @@
+Haiiii
+sas
+<button id="btn">Click</button>
+<script>
+    $(document).ready(function() {
+    $(document).on('click', '#btn', function() {
+       $.ajax({
+           url: 'http://localhost:3030/user/read/2',
+           type: 'GET',
+           success: function(data) {
+               console.log(data);
+           }
+       });
+    });
+});
+</script>

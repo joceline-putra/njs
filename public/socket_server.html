@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Socket Server Control</title>
+  <script src="/socket.io/socket.io.js"></script>
+</head>
+<body>
+  <h1>Server Control</h1>
+
+  <label for="roomSelect">Pilih Ruangan:</label>
+  <select id="roomSelect">
+    <option value="">-- Semua Ruangan --</option>
+  </select>
+
+  <br><br>
+  <input type="text" id="msgInput" placeholder="Ketik pesan notifikasi...">
+  <button id="sendBtn">Kirim Notifikasi</button>
+
+  <script>
+    const socket = io();
+    const roomSelect = document.getElementById('roomSelect');
+
+    // Terima daftar room dari server
+    socket.on('room_list', (roomList) => {
+      roomSelect.innerHTML = '<option value="">-- Semua Ruangan --</option>';
+      roomList.forEach((roomId) => {
+        const option = document.createElement('option');
+        option.value = roomId;
+        option.textContent = roomId;
+        roomSelect.appendChild(option);
+      });
+    });
+
+    // Saat tombol diklik
+    document.getElementById('sendBtn').onclick = () => {
+      const message = document.getElementById('msgInput').value;
+      const selectedRoom = roomSelect.value;
+
+      if (selectedRoom) {
+        socket.emit('notify_room', { room: selectedRoom, message });
+      } else {
+        socket.emit('notify_all', message);
+      }
+
+      document.getElementById('msgInput').value = '';
+    };
+  </script>
+</body>
+</html>
