@@ -1,4 +1,15 @@
 
+		 
+<!--start back-to-top-->
+<!-- <button onclick="topFunction()" class="btn btn-danger btn-icon" id="back-to-top">
+    <i class="ri-arrow-up-line"></i>
+</button> -->
+<!--end back-to-top-->
+<div class="customizer-setting d-none d-md-block">
+    <div class="btn-info rounded-pill shadow-lg btn btn-icon btn-lg p-2" data-bs-toggle="offcanvas" data-bs-target="#theme-settings-offcanvas" aria-controls="theme-settings-offcanvas">
+        <i class='mdi mdi-spin mdi-cog-outline fs-22'></i>
+    </div>
+</div>
 <div class="offcanvas offcanvas-end border-0" tabindex="-1" id="theme-settings-offcanvas">
     <div class="d-flex align-items-center bg-primary bg-gradient p-3 offcanvas-header">
         <h5 class="m-0 me-2 text-white">Theme Customizer</h5>
@@ -558,7 +569,7 @@
                             <h5 class="fs-13 text-center mt-2">Dark</h5>
                         </div>
                         <div class="col-4">
-                            <button class="btn btn-link avatar-md w-100 p-0 overflow-hidden border collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBgGradient" aria-expanded="false" aria-controls="collapseBgGradient">
+                            <button class="btn btn-link avatar-md w-100 p-0 overflow-hidden border collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBgGradient" aria-expanded="false" aria-controls="collapseBgGradient" aria-label="Show sidebar gradient options">
                                 <span class="d-flex gap-1 h-100">
                                     <span class="flex-shrink-0">
                                         <span class="bg-vertical-gradient d-flex h-100 flex-column gap-1 p-1">
@@ -755,7 +766,7 @@
                         <div class="col-lg-12">
                             <div class="text-center">
                                 <div class="profile-user position-relative d-inline-block mx-auto  mb-4">
-                                    <img id="profile_preview" src="../public/assets/velzon/images/users/avatar-1.jpg" class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="user-profile-image">
+                                    <img id="profile_preview" src="../public/assets/velzon/images/users/avatar-1.jpg" class="rounded-circle avatar-xl img-thumbnail user-profile-image" alt="">
                                     <div class="avatar-xs p-0 rounded-circle profile-photo-edit">
                                         <input id="profile-img-file-input" type="file" class="profile_picture profile-img-file-input">
                                         <label for="profile-img-file-input" class="profile-photo-edit avatar-xs">
@@ -766,7 +777,7 @@
                                     </div>
                                 </div>
                                 <h5 class="fs-16 mb-1">John Doe</h5>
-                                <p class="text-muted mb-0">john.doe@example.com</p>
+                                <p class="text-muted mb-0">john@doe.com</p>
                             </div>
                         </div>
                         <!-- <div class="col-lg-12">

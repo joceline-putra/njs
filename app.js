@@ -25,11 +25,12 @@ app.use(express.urlencoded({ extended: true })); // Untuk menangani form-urlenco
 
 // Routes dari Express
 // app.get("/", (req, res) => {
-//     res.sendFile(__dirname + "/src/views/user.html");
+//     res.sendFile(__dirname + "/src/views/index.html");
 // });
 app.use("/user", userRoutes); // Gunakan route user
-app.get("/socket_client", (req, res) => res.sendFile(__dirname + "/src/views/socket_client.html"));
-app.get("/socket_server", (req, res) => res.sendFile(__dirname + "/src/views/socket_server.html"));
+app.get("/socket_client", (req, res) => res.sendFile(__dirname + "/public/socket_client_1.html"));
+app.get("/socket_client_2", (req, res) => res.sendFile(__dirname + "/public/socket_client_2.html"));
+app.get("/socket_server", (req, res) => res.sendFile(__dirname + "/public/socket_server.html"));
 
 // Pasang WebSocket Routes
 socketRoutes(io); // Panggil socketRoutes dengan io
@@ -65,9 +66,9 @@ io.on('connection', (socket) => {
 });
 
 // Fallback: jika tidak ada route yang cocok, kirim index.html dari public
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, 'public', 'index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
 
 // Start the server
 // app.listen(process.env.APP_PORT, () => {

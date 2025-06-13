@@ -12,27 +12,6 @@ reloader(module); // Reload otomatis saat ada perubahan dalam pengembangan
 const assetPath = path.join(__dirname, "public/assets/velzon/images/logo-sm.png");
 console.log("Path ke logo:", assetPath);
 
-// Handle Volume Control via IPC
-ipcMain.handle('volume-up', async () => { 
-    console.log('Volume Up Clicked');
-    let vol = await loudness.getVolume();
-    vol = Math.min(100, vol + 5); // Batasi maksimal 100
-    await loudness.setVolume(vol);
-    return vol;
-});
-
-ipcMain.handle('volume-down', async () => {
-    console.log('Volume Down Clicked');
-    let vol = await loudness.getVolume();
-    vol = Math.max(0, vol - 5); // Batasi minimal 0
-    await loudness.setVolume(vol);
-    return vol;
-});
-
-ipcMain.handle('get-volume', async () => {
-    return await loudness.getVolume();
-});
-
 require('electron-reload')(__dirname, {
 	electron: require(`${__dirname}/node_modules/electron`)
 });
@@ -44,7 +23,7 @@ app.whenReady().then(async () => {
 	await loudness.setVolume(50); 
 
 	const win = new BrowserWindow({
-        width: 440,
+        width: 640,
         height: 600,
         x: 0, // posisi kiri
         y: 0, // posisi atas
@@ -61,14 +40,21 @@ app.whenReady().then(async () => {
     });
 
     // Load halaman UI utama aplikasi
-    win.loadFile('electron/karaoke.html');
-
-    // Membuka Developer Tools secara otomatis
-    win.webContents.openDevTools({ mode: 'bottom' });
+    // win.loadFile('electron/karaoke.html');
+    // win.loadFile('public/index.html');    
+    win.loadURL('http://localhost:3030');
 
     // Deteksi perubahan URL yang terjadi di Electron
     win.webContents.on('did-navigate', (event, newURL) => {
         console.log("Navigasi ke:", newURL);
+    });
+
+    // Atur zoom setelah window siap
+    win.webContents.on('did-finish-load', () => {
+        win.webContents.setZoomFactor(0.8); // 80% zoom
+
+        // Membuka Developer Tools secara otomatis
+        win.webContents.openDevTools({ mode: 'bottom' });        
     });
 
     // Menambahkan shortcut ESC untuk keluar dari aplikasi
@@ -94,6 +80,43 @@ app.on('window-all-closed', () => {
     app.quit();
 });
 
+
+// Handle Volume Control via IPC
+ipcMain.handle('volume-up', async () => { 
+    console.log('Volume Up Clicked');
+    let vol = await loudness.getVolume();
+    vol = Math.min(100, vol + 5); // Batasi maksimal 100
+    await loudness.setVolume(vol);
+    return vol;
+});
+
+ipcMain.handle('volume-down', async () => {
+    console.log('Volume Down Clicked');
+    let vol = await loudness.getVolume();
+    vol = Math.max(0, vol - 5); // Batasi minimal 0
+    await loudness.setVolume(vol);
+    return vol;
+});
+
+ipcMain.handle('get-volume', async () => {
+    return await loudness.getVolume();
+});
+
+ipcMain.handle('set-fullscreen', async (event, isFullscreen) => {
+    console.log('Fullscreen Clicked ss');
+    const win = BrowserWindow.getFocusedWindow();
+    // console.log('Fullscreen Clicked ss', isFullscreen);
+    // console.log(win);
+    // if (win) {
+        win.setFullScreen(isFullscreen);
+    // }
+    return isFullscreen;
+});
+
+ipcMain.handle('is-fullscreen', (event) => {
+    const win = BrowserWindow.getFocusedWindow();
+    return win ? win.isFullScreen() : false;
+});
 
 
 

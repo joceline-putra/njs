@@ -7,7 +7,7 @@ const userController = require("../controllers/userController");
 // router.get("/user", userController.page);
 router.get("/", (req, res) => 
     res.sendFile(
-        path.join(__dirname, '../views/user.html')
+        path.join(__dirname, '../../public/user.html')
     )
 );
 router.post("/", userController.index);
